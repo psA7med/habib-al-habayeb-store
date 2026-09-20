@@ -2,9 +2,10 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { ShoppingBag, Heart } from "lucide-react"
+import { ShoppingBag, Heart, Search } from "lucide-react"
 import { SearchInput } from "@/components/search/search-input"
 import { WishlistDrawer } from "@/components/layout/wishlist-drawer"
+import { SearchModal } from "@/components/search/search-modal"
 import { siteConfig } from "@/lib/config"
 import { useTranslations } from "next-intl"
 import { useState, useEffect } from "react"
@@ -18,6 +19,7 @@ interface HeaderProps {
 export function Header({}: HeaderProps) {
   const t = useTranslations("nav")
   const [wishlistOpen, setWishlistOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const openCart = useCartStore((s) => s.openCart)
   const getItemCount = useCartStore((s) => s.getItemCount)
   const wishlistItems = useWishlistStore((s) => s.items)
@@ -70,16 +72,19 @@ export function Header({}: HeaderProps) {
             </button>
           </div>
 
-          {/* Logo — Left on desktop, centered on mobile */}
-          <Link href="/" className="flex-shrink-0">
-            <Image
-              src="/logo.png"
-              alt={siteConfig.name}
-              width={140}
-              height={44}
-              priority
-              className="h-11 w-auto"
-            />
+          {/* Logo — Left on desktop, centered on mobile — Cropped to remove transparent space */}
+          <Link href="/" className="flex-shrink-0 h-12 flex items-center">
+            <div className="h-12 w-auto relative overflow-hidden">
+              <Image
+                src="/logo.png"
+                alt={siteConfig.name}
+                width={2172}
+                height={724}
+                priority
+                className="h-12 w-auto object-cover object-center"
+                style={{ objectPosition: "center" }}
+              />
+            </div>
           </Link>
 
           {/* DESKTOP: Center — Large Search Bar */}
@@ -128,14 +133,19 @@ export function Header({}: HeaderProps) {
             </button>
           </div>
 
-          {/* MOBILE: Right — Search */}
-          <div className="lg:hidden flex-1 max-w-xs">
-            <SearchInput />
-          </div>
+          {/* MOBILE: Right — Search Icon */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors"
+            aria-label="Search"
+          >
+            <Search className="h-5 w-5 text-foreground" />
+          </button>
         </div>
       </header>
 
       <WishlistDrawer isOpen={wishlistOpen} onClose={() => setWishlistOpen(false)} />
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   )
 }
