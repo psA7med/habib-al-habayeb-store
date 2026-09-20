@@ -83,8 +83,8 @@ export function Header({}: HeaderProps) {
           </Link>
 
           {/* DESKTOP: Center — Large Search Bar */}
-          <div className="hidden lg:flex flex-1 justify-center px-8 relative z-[60]">
-            <div className="w-full max-w-md relative">
+          <div className="hidden lg:flex flex-1 justify-center px-8 relative z-[60] overflow-visible">
+            <div className="w-full max-w-md relative overflow-visible">
               <SearchInput />
             </div>
           </div>
