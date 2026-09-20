@@ -179,7 +179,7 @@ export interface Order {
   currency: string
   shippingAddress: Address
   billingAddress?: Address
-  customerEmail: string
+  customerEmail?: string
   customerName: string
   createdAt: string
   updatedAt: string

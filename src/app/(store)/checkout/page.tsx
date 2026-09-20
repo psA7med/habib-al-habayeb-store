@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
 import { useCartStore } from "@/store/cart"
 import { useOrdersStore } from "@/store/orders"
 import { CartSummary } from "@/components/cart/cart-summary"
@@ -26,15 +27,12 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false)
 
   const [form, setForm] = useState({
+    fullName: "",
+    phone: "",
     email: "",
-    firstName: "",
-    lastName: "",
-    line1: "",
-    line2: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    country: "US",
+    address: "",
+    orderNote: "",
+    country: "EG",
   })
 
   useEffect(() => setMounted(true), [])
@@ -72,7 +70,7 @@ export default function CheckoutPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    if (!form.email || !form.firstName || !form.lastName || !form.line1 || !form.city || !form.state || !form.postalCode) {
+    if (!form.fullName || !form.phone || !form.address) {
       toast.error("Please fill in all required fields")
       return
     }
@@ -110,18 +108,19 @@ export default function CheckoutPage() {
       shippingAddress: {
         id: "addr-1",
         type: "shipping",
-        firstName: form.firstName,
-        lastName: form.lastName,
-        line1: form.line1,
-        line2: form.line2 || undefined,
-        city: form.city,
-        state: form.state,
-        postalCode: form.postalCode,
+        firstName: form.fullName,
+        lastName: "",
+        line1: form.address,
+        line2: form.orderNote || undefined,
+        city: "",
+        state: "",
+        postalCode: "",
         country: form.country,
+        phone: form.phone,
         isDefault: true,
       },
-      customerEmail: form.email,
-      customerName: `${form.firstName} ${form.lastName}`,
+      customerEmail: form.email || undefined,
+      customerName: form.fullName,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
@@ -139,14 +138,37 @@ export default function CheckoutPage() {
       <form onSubmit={handleSubmit} className="mt-8 grid gap-8 lg:grid-cols-5">
         {/* Form */}
         <div className="space-y-8 lg:col-span-3">
-          {/* Contact */}
+          {/* Customer Info */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Contact Information</CardTitle>
+              <CardTitle className="text-lg">Customer Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="fullName">Full Name *</Label>
+                <Input
+                  id="fullName"
+                  name="fullName"
+                  value={form.fullName}
+                  onChange={handleChange}
+                  placeholder="Your full name"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number *</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={form.phone}
+                  onChange={handleChange}
+                  placeholder="+20 1XX XXX XXXX"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
                 <Input
                   id="email"
                   name="email"
@@ -154,49 +176,38 @@ export default function CheckoutPage() {
                   value={form.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  required
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* Shipping */}
+          {/* Delivery Address */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Shipping Address</CardTitle>
+              <CardTitle className="text-lg">Delivery Address</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First name</Label>
-                  <Input id="firstName" name="firstName" value={form.firstName} onChange={handleChange} required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last name</Label>
-                  <Input id="lastName" name="lastName" value={form.lastName} onChange={handleChange} required />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="address">Address *</Label>
+                <Input
+                  id="address"
+                  name="address"
+                  value={form.address}
+                  onChange={handleChange}
+                  placeholder="Street address and building number"
+                  required
+                />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="line1">Address</Label>
-                <Input id="line1" name="line1" value={form.line1} onChange={handleChange} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="line2">Apartment, suite, etc. (optional)</Label>
-                <Input id="line2" name="line2" value={form.line2} onChange={handleChange} />
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input id="city" name="city" value={form.city} onChange={handleChange} required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="state">State</Label>
-                  <Input id="state" name="state" value={form.state} onChange={handleChange} required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="postalCode">ZIP code</Label>
-                  <Input id="postalCode" name="postalCode" value={form.postalCode} onChange={handleChange} required />
-                </div>
+                <Label htmlFor="orderNote">Order Note</Label>
+                <Textarea
+                  id="orderNote"
+                  name="orderNote"
+                  value={form.orderNote}
+                  onChange={(e) => setForm((f) => ({ ...f, orderNote: e.target.value }))}
+                  placeholder="Any delivery instructions or special requests"
+                  rows={3}
+                />
               </div>
             </CardContent>
           </Card>

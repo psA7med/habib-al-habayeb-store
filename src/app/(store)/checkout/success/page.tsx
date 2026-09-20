@@ -94,9 +94,6 @@ function CheckoutSuccessContent() {
 
         <div className="mt-8 flex gap-4">
           <Button asChild>
-            <Link href="/account/orders">View Orders</Link>
-          </Button>
-          <Button variant="outline" asChild>
             <Link href="/shop">Continue Shopping</Link>
           </Button>
         </div>

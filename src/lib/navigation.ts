@@ -19,12 +19,6 @@ export const shopLinks: NavItem[] = [
   { name: "Food & Drink", href: "/food-drink" },
 ]
 
-export const accountLinks: NavItem[] = [
-  { name: "My Account", href: "/account" },
-  { name: "Wishlist", href: "/wishlist" },
-  { name: "Orders", href: "/account/orders" },
-]
-
 export const infoLinks: NavItem[] = [
   { name: "All Brands", href: "/brands" },
   { name: "Blog", href: "/blog" },
@@ -36,6 +30,5 @@ export const infoLinks: NavItem[] = [
 
 export const mobileMenuSections: NavSection[] = [
   { label: "Shop", items: shopLinks },
-  { label: "Account", items: accountLinks },
   { label: "Info", items: infoLinks },
 ]
