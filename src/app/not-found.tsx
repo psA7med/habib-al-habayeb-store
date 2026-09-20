@@ -3,16 +3,12 @@ import { Button } from "@/components/ui/button"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { AnnouncementBar } from "@/components/layout/announcement-bar"
-import { categoryRepository } from "@/lib/repositories"
 
 export default async function NotFound() {
-  // Fetch categories so the header nav still works on 404
-  const categories = await categoryRepository.list()
-
   return (
     <>
       <AnnouncementBar />
-      <Header categories={categories} />
+      <Header />
       <main className="flex-1">
         <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
           <p className="text-sm font-medium text-muted-foreground">404</p>
