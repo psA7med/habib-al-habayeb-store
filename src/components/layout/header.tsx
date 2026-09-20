@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Search, ShoppingBag, Menu, Heart, ChevronDown } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { SearchModal } from "@/components/search/search-modal"
@@ -129,8 +130,15 @@ export function Header({ categories = [] }: HeaderProps) {
         </Sheet>
 
         {/* Logo */}
-        <Link href="/" className="text-xl font-semibold tracking-tight">
-          {siteConfig.name}
+        <Link href="/" className="flex-shrink-0">
+          <Image
+            src="/logo.png"
+            alt={siteConfig.name}
+            width={140}
+            height={44}
+            priority
+            className="h-11 w-auto"
+          />
         </Link>
 
         {/* Desktop nav */}
@@ -155,14 +163,6 @@ export function Header({ categories = [] }: HeaderProps) {
           >
             <Search className="h-5 w-5" />
           </button>
-
-          <Link
-            href="/wishlist"
-            className="hidden h-10 w-10 items-center justify-center rounded-md hover:bg-accent lg:inline-flex"
-            aria-label={t("wishlist")}
-          >
-            <Heart className="h-5 w-5" />
-          </Link>
 
           {/* Cart */}
           <button

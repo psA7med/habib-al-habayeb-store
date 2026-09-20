@@ -134,17 +134,7 @@ export function Footer() {
 
         <div className="flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-muted-foreground">
-            &copy; {siteConfig.copyrightYear} {siteConfig.name}. All rights reserved.
-            <br className="sm:hidden" />
-            {" "}Design by{" "}
-            <a
-              href="https://epicdesignlabs.com"
-              target="_blank"
-              rel="noopener"
-              className="underline hover:text-foreground"
-            >
-              Epic Design Labs
-            </a>
+            &copy; {siteConfig.copyrightYear} {siteConfig.name}. جميع الحقوق محفوظة.
           </p>
           <div className="flex items-center gap-4">
             <a href="#" className="text-muted-foreground transition-colors hover:text-foreground" aria-label="Twitter">

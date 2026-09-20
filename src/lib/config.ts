@@ -5,20 +5,20 @@
 
 export const siteConfig = {
   // Branding
-  name: "Next.js Ecommerce Starter",
-  tagline: "A free, open-source Next.js ecommerce template.",
+  name: "حبيب الحبايب",
+  tagline: "كل احتياجات البيت في مكان واحد",
   description:
-    "A free, production-ready Next.js ecommerce starter template built with Tailwind CSS and shadcn/ui. Responsive, accessible, SEO optimized, and ready to connect to any checkout system. Built by Epic Design Labs.",
+    "متجر البقالة الالكترونية الأول في مصر. نوفر لك كل احتياجات البيت من منتجات طازة وموثوقة بأسعار مناسبة.",
 
   // Announcement bar (set to "" to hide)
-  announcement: "Free shipping on all orders over $75 — Shop now!",
+  announcement: "",
 
   // URLs
   url: process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
 
   // Contact
   contact: {
-    email: "support@epicdesignlabs.com",
+    email: "",
     phone: "",
     address: {
       street: "",
@@ -31,20 +31,20 @@ export const siteConfig = {
 
   // Social links (set to "" to hide)
   social: {
-    twitter: "https://x.com/epicdesignlabs",
-    instagram: "https://instagram.com/epicdesignlabs",
-    facebook: "https://facebook.com/epicdesignlabs",
+    twitter: "",
+    instagram: "",
+    facebook: "",
     youtube: "",
     tiktok: "",
   },
 
   // Shipping
-  freeShippingThreshold: 7500, // in cents ($75.00)
-  taxRate: 0.08, // 8%
+  freeShippingThreshold: 50000, // in cents (500 EGP)
+  taxRate: 0.14, // 14% Egyptian VAT
 
   // Currency & locale
-  currency: "USD",
-  locale: "en-US",
+  currency: "EGP",
+  locale: "ar-EG",
 
   // Legal
   copyrightYear: new Date().getFullYear(),
