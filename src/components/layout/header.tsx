@@ -2,8 +2,9 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Search, ShoppingBag, Heart } from "lucide-react"
-import { SearchModal } from "@/components/search/search-modal"
+import { ShoppingBag, Heart } from "lucide-react"
+import { SearchInput } from "@/components/search/search-input"
+import { WishlistDrawer } from "@/components/layout/wishlist-drawer"
 import { siteConfig } from "@/lib/config"
 import { useTranslations } from "next-intl"
 import { useState, useEffect } from "react"
@@ -16,7 +17,7 @@ interface HeaderProps {
 
 export function Header({}: HeaderProps) {
   const t = useTranslations("nav")
-  const [searchOpen, setSearchOpen] = useState(false)
+  const [wishlistOpen, setWishlistOpen] = useState(false)
   const openCart = useCartStore((s) => s.openCart)
   const getItemCount = useCartStore((s) => s.getItemCount)
   const wishlistItems = useWishlistStore((s) => s.items)
@@ -25,23 +26,6 @@ export function Header({}: HeaderProps) {
   useEffect(() => setMounted(true), [])
   const itemCount = mounted ? getItemCount() : 0
   const wishlistCount = mounted ? wishlistItems.length : 0
-
-  // Cmd+K / Ctrl+K to open search
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault()
-        setSearchOpen(true)
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [])
-
-  const handleWishlistClick = () => {
-    // TODO: Navigate to wishlist page or open wishlist modal
-    console.log("Wishlist clicked")
-  }
 
   return (
     <>
@@ -69,7 +53,7 @@ export function Header({}: HeaderProps) {
 
             {/* Wishlist */}
             <button
-              onClick={handleWishlistClick}
+              onClick={() => setWishlistOpen(true)}
               className="relative inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors"
               aria-label="Wishlist"
             >
@@ -99,15 +83,9 @@ export function Header({}: HeaderProps) {
           </Link>
 
           {/* DESKTOP: Center — Large Search Bar */}
-          <div className="hidden lg:flex flex-1 justify-center px-8">
-            <div className="w-full max-w-md">
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-2 border-border bg-white hover:border-primary transition-colors text-muted-foreground text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-              >
-                <Search className="h-5 w-5 flex-shrink-0" />
-                <span>{t("searchProducts")}</span>
-              </button>
+          <div className="hidden lg:flex flex-1 justify-center px-8 relative z-[60]">
+            <div className="w-full max-w-md relative">
+              <SearchInput />
             </div>
           </div>
 
@@ -115,7 +93,7 @@ export function Header({}: HeaderProps) {
           <div className="hidden lg:flex gap-4 items-center flex-shrink-0">
             {/* Wishlist */}
             <button
-              onClick={handleWishlistClick}
+              onClick={() => setWishlistOpen(true)}
               className="relative inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors group"
               aria-label="Wishlist"
             >
@@ -150,18 +128,14 @@ export function Header({}: HeaderProps) {
             </button>
           </div>
 
-          {/* MOBILE: Right — Search Icon */}
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors"
-            aria-label={t("searchProducts")}
-          >
-            <Search className="h-5 w-5 text-foreground" />
-          </button>
+          {/* MOBILE: Right — Search */}
+          <div className="lg:hidden flex-1 max-w-xs">
+            <SearchInput />
+          </div>
         </div>
       </header>
 
-      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <WishlistDrawer isOpen={wishlistOpen} onClose={() => setWishlistOpen(false)} />
     </>
   )
 }
