@@ -72,17 +72,16 @@ export function Header({}: HeaderProps) {
             </button>
           </div>
 
-          {/* Logo — Left on desktop, centered on mobile — Cropped to remove transparent space */}
+          {/* Logo — Left on desktop, centered on mobile */}
           <Link href="/" className="flex-shrink-0 h-12 flex items-center">
-            <div className="h-12 w-auto relative overflow-hidden">
+            <div className="h-12 w-auto">
               <Image
-                src="/logo.png"
+                src="/logo.svg"
                 alt={siteConfig.name}
-                width={2172}
-                height={724}
+                width={400}
+                height={133}
                 priority
-                className="h-12 w-auto object-cover object-center"
-                style={{ objectPosition: "center" }}
+                className="h-12 w-auto"
               />
             </div>
           </Link>
