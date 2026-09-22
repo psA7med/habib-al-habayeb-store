@@ -8,6 +8,7 @@ import { siteConfig } from "@/lib/config"
 import { formatPrice } from "@/lib/utils"
 import { ProductGrid } from "@/components/products/product-grid"
 import { NewsletterForm } from "@/components/layout/newsletter-form"
+import { HeroScroll } from "@/components/layout/hero-scroll"
 import { PLACEHOLDER_IMAGE } from "@/lib/constants"
 import { productRepository, categoryRepository } from "@/lib/repositories"
 
@@ -39,25 +40,8 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero */}
-      <section className="relative flex h-[650px] items-center justify-center bg-neutral-50">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            حبيب الحبايب
-          </h1>
-          <p className="mt-6 text-lg text-muted-foreground">
-            كل احتياجات البيت في مكان واحد
-          </p>
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
-            <Button size="lg" asChild>
-              <Link href="/shop">
-                ابدأ التسوق
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Hero with Scroll Zoom */}
+      <HeroScroll />
 
       {/* Categories */}
       <section className="mx-auto w-full max-w-[1440px] px-4 py-16 sm:px-6 lg:px-8">

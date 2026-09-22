@@ -1,40 +1,123 @@
-Fix ONLY the search autocomplete/suggestions.
+Implement ONLY the new Hero section and update the website logo asset.
 
-The current inline search input is working, but autocomplete suggestions are not reliably visible.
+1. HERO IMAGE
+Use the attached 9:16 supermarket image as the ONLY Hero background image.
 
-Requirements:
+Do not regenerate or modify the image.
+Do not retouch it.
+Do not crop away the important storefront/sign area unnecessarily.
+Preserve the image exactly as provided.
 
-1. Keep the existing inline search bar exactly as it is.
-2. Do NOT open a fullscreen modal.
-3. Do NOT navigate to /search while the user is typing.
-4. While typing, show a compact dropdown directly below the search input.
-5. Suggestions must come ONLY from the existing product data.
-6. Match product names/searchable product text against the current query.
-7. Show a small number of relevant suggestions.
-8. Clicking a suggestion should navigate to the appropriate product/search result.
-9. Pressing Enter should perform the full search as it currently does.
-10. Clicking outside the dropdown should close it.
-11. Escape should close it.
-12. The dropdown must remain visually attached to the search field.
-13. Ensure the dropdown appears above other header/page content using correct stacking context.
-14. Do not change the desktop header layout.
-15. Do not change the mobile header layout.
-16. Do not modify cart, wishlist, checkout, products, categories, or routing architecture.
-17. Do not add a new package.
+The Hero should feel like a real photograph of the supermarket.
 
-Use the existing search architecture and product data.
+2. OFFICIAL LOGO
+Use the attached updated SVG logo as the official "حبيب الحبايب" logo.
 
-Important:
-Keep the search UI practical and similar to a normal ecommerce/search experience.
-No glassmorphism.
-No giant overlay.
-No unnecessary animation.
+This SVG is the SOURCE OF TRUTH.
 
-After implementation:
-- run typecheck
-- run production build
-- report exact files modified
-- confirm autocomplete works on desktop and mobile
-- confirm no unrelated files were changed
+Do NOT recreate the logo.
+Do NOT redraw it.
+Do NOT generate Arabic text.
+Do NOT change its proportions.
+Do NOT recolor it.
+Do NOT distort it.
 
-Make no unrelated changes.
+Use the exact SVG asset in the Hero.
+
+Also replace the current website logo asset with this new SVG wherever the existing official store logo is used, while keeping the current header layout unchanged.
+
+3. HERO LOGO POSITION
+Place the official logo visibly over the Hero image, approximately in the visual center of the screen, aligned naturally with the storefront sign.
+
+The logo should remain clearly readable.
+
+Do not make it huge.
+Do not make it tiny.
+
+4. SCROLL ANIMATION
+The Hero must be scroll-controlled.
+
+At the beginning of the Hero:
+- show the image at normal scale
+- show the logo clearly
+- no movement
+
+As the user scrolls through the Hero:
+- smoothly zoom INTO the storefront sign
+- the zoom should feel like the camera is naturally moving closer
+- keep the sign as the focal point
+- use a subtle zoom only
+- approximately scale from 1.0 to 1.12–1.18
+- do NOT zoom aggressively
+- do NOT enter deeply inside the store
+- do NOT create a dramatic cinematic zoom
+
+The movement must be smooth and linear/eased with the user's scroll.
+
+When scrolling upward, the animation should smoothly reverse.
+
+5. NO VIDEO
+Do NOT use AI-generated video.
+Do NOT use image sequence.
+Do NOT generate additional frames.
+
+Use the static image with CSS/JS scroll-based transform.
+
+6. RESPONSIVE
+The Hero must work properly on both mobile and desktop.
+
+Mobile:
+- preserve the 9:16 composition
+- keep the storefront sign and logo visible
+- avoid cropping the important sign area
+- keep the Hero visually centered
+
+Desktop:
+- adapt the same image responsively
+- do not stretch the image
+- do not distort the logo
+- maintain the storefront/sign as the focal point
+
+Use responsive object positioning/cropping where necessary.
+
+7. HERO HEIGHT / SCROLL EXPERIENCE
+Make the Hero tall enough to allow the zoom to happen gradually during scrolling.
+
+The image should remain visually stable while the user scrolls.
+
+The Hero should not suddenly jump.
+
+After the Hero scroll animation finishes, the next section should appear naturally:
+PRODUCT CATEGORIES
+
+8. DESIGN STYLE
+Keep the design simple and realistic.
+
+No:
+- gradient overlays
+- glassmorphism
+- floating cards
+- random shapes
+- unnecessary text
+- CTA button
+- decorative UI
+- fake statistics
+- AI-style effects
+- excessive animation
+
+The Hero should primarily be:
+SUPERMARKET PHOTO + OFFICIAL LOGO + SUBTLE SCROLL ZOOM
+
+9. IMPORTANT
+Do not modify the existing Header structure.
+Do not modify the Categories section.
+Do not modify the Footer.
+Do not modify unrelated pages.
+
+Only:
+- implement the new Hero
+- update the official logo asset to the attached SVG
+- make the Hero scroll-controlled
+
+Verify desktop and mobile after implementation.
+Run typecheck/build.
