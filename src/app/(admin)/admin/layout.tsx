@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { LayoutDashboard, Package, Users } from "lucide-react"
-import { useAuthGuard } from "@/hooks/use-auth-guard"
 
 const adminNav = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -15,25 +14,6 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { user, isReady } = useAuthGuard()
-
-  if (!isReady) return null
-
-  if (user?.role !== "admin") {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Access Denied</h1>
-          <p className="mt-2 text-muted-foreground">
-            You need admin privileges to access this page.
-          </p>
-          <Link href="/" className="mt-4 inline-block text-sm underline">
-            Go Home
-          </Link>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="flex min-h-screen">

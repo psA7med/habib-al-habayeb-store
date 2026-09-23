@@ -14,30 +14,6 @@ export const addressSchema = z.object({
   phone: z.string().optional(),
 })
 
-// --- Auth ---
-
-export const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-})
-
-export const registerSchema = z
-  .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  })
-
-export const forgotPasswordSchema = z.object({
-  email: z.string().email("Invalid email address"),
-})
-
 // --- Checkout ---
 
 export const checkoutFormSchema = z.object({
@@ -65,9 +41,6 @@ export const newsletterSchema = z.object({
 // --- Type exports ---
 
 export type AddressFormData = z.infer<typeof addressSchema>
-export type LoginFormData = z.infer<typeof loginSchema>
-export type RegisterFormData = z.infer<typeof registerSchema>
-export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>
 export type CheckoutFormData = z.infer<typeof checkoutFormSchema>
 export type ContactFormData = z.infer<typeof contactFormSchema>
 export type NewsletterFormData = z.infer<typeof newsletterSchema>

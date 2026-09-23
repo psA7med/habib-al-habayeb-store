@@ -10,9 +10,9 @@ export default async function StoreLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Fetch category tree server-side so the Header doesn't depend on
-  // a specific data source — the repository layer handles that.
-  const categories = await categoryRepository.list()
+  // Categories are no longer used by the Header in the simplified layout
+  // Keeping this fetch in case they're needed by other components in the future
+  const _categories = await categoryRepository.list()
 
   return (
     <>
@@ -23,7 +23,7 @@ export default async function StoreLayout({
         Skip to content
       </a>
       <AnnouncementBar />
-      <Header categories={categories} />
+      <Header />
       <main id="main-content" className="flex-1">
         {children}
       </main>
