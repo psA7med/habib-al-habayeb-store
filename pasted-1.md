@@ -1,138 +1,159 @@
-Fix ONLY the Hero scroll behavior and the centered Hero logo styling.
+REPLACE THE CURRENT HERO SCROLL-LOCK IMPLEMENTATION COMPLETELY.
 
-1. HERO SCROLL LOCK / ZOOM PHASE
+The current wheel/touch scroll-lock implementation is not working correctly.
+Do NOT try to patch the existing preventDefault-based logic.
 
-Change the Hero behavior so that scrolling does NOT immediately move the page to the Categories section.
+Use a robust STICKY SCROLL architecture instead.
 
-When the user first starts scrolling inside the Hero:
+REQUIREMENT:
 
-- Lock the page's normal vertical scrolling.
-- Consume the scroll input inside the Hero.
-- Use the scroll input ONLY to control the Hero zoom.
-- The Hero image should smoothly zoom from scale 1.0 to approximately 1.15.
-- The zoom must be subtle and smooth.
-- Keep the Hero fixed/pinned visually while the zoom is happening.
-- The Categories section must NOT move into view during this zoom phase.
+The Hero must remain visually pinned while the user scrolls through the first part of its scroll range.
 
-The zoom phase should require approximately 3–4 deliberate scroll inputs / wheel steps to complete.
+During this pinned phase:
+- the page must NOT visibly move to Categories
+- the Hero image zooms smoothly from 1.0 → 1.15
+- the user's scroll controls the zoom progress
+- the Hero remains fixed in the viewport
 
-Do NOT make one tiny scroll complete the whole zoom.
-Do NOT require a huge amount of scrolling.
-
-After the zoom reaches 100%:
-- Release the scroll lock.
-- Restore normal page scrolling immediately.
-- The next scroll should naturally move the user toward the Categories section.
-
-When the user scrolls back upward:
-- The same behavior should work in reverse.
-- When returning to the Hero, scrolling should reverse the zoom first.
-- Only after the zoom returns to its starting position should normal upward page scrolling continue.
+After the zoom reaches 1.15:
+- the pinned Hero phase ends
+- normal page scrolling continues
+- Categories naturally comes into view
 
 IMPORTANT:
-Do not create a visible scroll jump.
-Do not let the Categories section appear during the locked zoom phase.
-The entire zoom phase should feel like the camera is staying in place while the image smoothly moves closer.
+Do NOT intercept or disable wheel events.
+Do NOT use preventDefault().
+Do NOT lock document scrolling.
+Do NOT attach global wheel-lock logic.
+Do NOT cancel native scrolling.
 
-2. MOBILE SUPPORT
+IMPLEMENTATION:
 
-Implement the same behavior for touch scrolling on mobile.
+Create a tall Hero scroll section with an inner sticky viewport.
 
-During the Hero zoom phase:
-- Vertical touch movement should control the zoom.
-- The page should remain visually pinned.
-- Categories should not move into view until the zoom phase is complete.
+Example concept:
 
-Keep the behavior responsive and natural.
+Hero scroll container:
+~200vh–250vh
 
-3. HERO IMAGE
+Inside:
+sticky element
+height: 100vh
 
-Keep the current Hero image unchanged.
-Do not replace it.
-Do not crop it unnecessarily.
-Do not modify the photograph.
+The sticky Hero remains visually fixed while the outer section is being scrolled.
 
-Only change how it responds to scrolling.
+Map ONLY the FIRST PART of the Hero scroll progress to the image zoom:
 
-4. CENTERED HERO LOGO
+progress 0% → scale 1.00
+progress 100% of zoom phase → scale 1.15
 
-Use the UPDATED OFFICIAL SVG logo already provided by the user.
+The zoom phase should consume approximately the first 35–45% of the Hero's total scroll distance.
 
-IMPORTANT:
-This is the logo displayed in the CENTER OF THE HERO.
-Do NOT change the Header logo styling as part of this task.
+After the zoom phase:
+keep scale at 1.15
+allow the remaining Hero scroll distance to naturally move the page toward the next section.
 
-Create/use a dedicated Hero version of the same SVG so the Header logo remains unchanged.
+The Categories section must not appear while the zoom phase is active.
 
-Hero logo colors:
-- Arabic "حبيب الحبايب": dark neutral gray / charcoal
-- "MARKET": a second complementary neutral gray tone, slightly different from the Arabic text
-- Keep both colors within a premium neutral palette: charcoal, graphite, gray, off-white tones
-- Do NOT use the original bright blue Hero logo color
-- Preserve the exact logo shape, Arabic lettering, proportions, dots, typography, and aspect ratio
-- Do NOT redraw or regenerate the logo
+The user experience should feel like:
 
-The Hero logo should remain centered and visually prominent.
+START
+→ Hero visible
+→ user scrolls
+→ Hero stays pinned
+→ image smoothly zooms
+→ zoom finishes
+→ Hero releases
+→ normal page scroll continues
+→ Categories appears
 
-Do not make it excessively large.
+REVERSE SCROLL:
 
-Do not distort it.
+When the user scrolls upward:
+- Categories moves away
+- Hero becomes sticky again
+- reverse the zoom smoothly from 1.15 → 1.00
+- once scale reaches 1.00, continue normal upward page scrolling
 
-Maintain its aspect ratio.
+ZOOM:
 
-5. CONTRAST
+Use smooth interpolation based on scroll progress.
+Start: scale(1)
+End: scale(1.15)
 
-Make sure the new neutral Hero logo remains clearly visible against the supermarket photograph.
+The zoom focal point should remain around the storefront sign / center of the supermarket.
 
-Use only a very subtle natural shadow/contrast treatment if necessary for readability.
+Do NOT zoom excessively.
 
-Do not add a glowing effect.
-Do not add a colorful outline.
-Do not redesign the logo.
+Do NOT move the image sideways.
 
-6. DO NOT CHANGE
+Do NOT rotate the image.
 
-Do not modify:
-- Header structure
-- Header logo
-- Categories
+Do NOT change the image.
+
+LOGO:
+
+Keep the centered Hero logo exactly as it currently exists.
+Do not modify the logo asset as part of this task.
+
+PERFORMANCE:
+
+Do not use continuous setState on every scroll event.
+
+Prefer:
+- requestAnimationFrame
+- CSS transform
+- scroll progress calculation
+
+Use transform: scale(...) only.
+
+Do not cause layout reflow.
+
+Do not add heavy animation libraries.
+
+MOBILE:
+
+The same sticky behavior must work naturally with touch scrolling.
+
+Do not disable native touch scrolling.
+
+Do not use preventDefault() for touchmove.
+
+The Hero must remain visually pinned during the zoom phase on mobile.
+
+CRITICAL:
+
+Remove the previous scroll-lock / wheel interception implementation completely.
+
+There should be NO preventDefault-based Hero scroll lock.
+
+The browser's native scrolling remains enabled at all times.
+
+The sticky Hero creates the visual effect of "scrolling being paused" while the zoom happens.
+
+DO NOT MODIFY:
+
+- Header
+- Categories content
 - Footer
+- Product sections
 - Hero image
-- Hero layout
-- typography outside the Hero logo
-- other pages
-- unrelated components
+- Logo asset
+- Other pages
 
-Only modify:
-- Hero scroll/zoom interaction
-- centered Hero logo styling
+Only replace the Hero scroll behavior.
 
-7. FINAL BEHAVIOR
+VERIFY:
 
-Expected behavior:
+Desktop mouse wheel
+Mobile touch scrolling
+Forward scroll
+Reverse scroll
+Zoom smoothness
+No jump to Categories during zoom
+No stuck scrolling
+No scroll deadlock
+No layout shift
+No horizontal overflow
 
-Page loads
-→ Hero image is static at scale 1.0
-→ first scroll starts zoom
-→ next few scrolls continue zoom
-→ approximately 3–4 scroll inputs complete the zoom
-→ page remains pinned during this phase
-→ zoom reaches approximately 1.15
-→ scroll lock releases
-→ next scroll moves normally to Categories
-
-Scrolling upward should reverse the process naturally.
-
-8. VERIFY
-
-Test:
-- Desktop mouse wheel
-- Mobile touch scrolling
-- Hero zoom smoothness
-- No accidental jump to Categories
-- No scroll chaining during zoom
-- Correct reverse behavior
-- Hero logo colors
-- Hero logo remains undistorted
-
-Run typecheck/build after the change.
+Run typecheck and build after implementation.
