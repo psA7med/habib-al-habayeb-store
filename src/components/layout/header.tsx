@@ -32,16 +32,16 @@ export function Header({}: HeaderProps) {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b border-border bg-white">
-        <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-14 lg:h-16 max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           {/* MOBILE: Left — Cart + Wishlist */}
           <div className="flex lg:hidden gap-2">
             {/* Cart */}
             <button
               onClick={openCart}
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors"
+              className="relative inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent transition-colors"
               aria-label={t("openCart")}
             >
-              <ShoppingBag className="h-5 w-5 text-foreground" />
+              <ShoppingBag className="h-4.5 w-4.5 text-foreground" />
               {itemCount > 0 && (
                 <span
                   className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-white"
@@ -56,10 +56,10 @@ export function Header({}: HeaderProps) {
             {/* Wishlist */}
             <button
               onClick={() => setWishlistOpen(true)}
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors"
+              className="relative inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent transition-colors"
               aria-label="Wishlist"
             >
-              <Heart className="h-5 w-5 text-foreground" />
+              <Heart className="h-4.5 w-4.5 text-foreground" />
               {wishlistCount > 0 && (
                 <span
                   className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-white"
@@ -73,15 +73,15 @@ export function Header({}: HeaderProps) {
           </div>
 
           {/* Logo — Left on desktop, centered on mobile */}
-          <Link href="/" className="flex-shrink-0 h-12 flex items-center">
-            <div className="h-12 w-auto">
+          <Link href="/" className="flex-shrink-0 flex items-center">
+            <div className="h-14 w-[140px] lg:w-[180px] flex items-center justify-center">
               <Image
                 src="/logo.svg"
                 alt={siteConfig.name}
-                width={400}
-                height={133}
+                width={140}
+                height={50}
                 priority
-                className="h-12 w-auto"
+                className="h-full w-full object-contain"
               />
             </div>
           </Link>
@@ -98,7 +98,7 @@ export function Header({}: HeaderProps) {
             {/* Wishlist */}
             <button
               onClick={() => setWishlistOpen(true)}
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors group"
+              className="relative inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-accent transition-colors group"
               aria-label="Wishlist"
             >
               <Heart className="h-5 w-5 text-foreground group-hover:text-primary transition-colors" />
@@ -116,7 +116,7 @@ export function Header({}: HeaderProps) {
             {/* Cart */}
             <button
               onClick={openCart}
-              className="relative inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors group"
+              className="relative inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-accent transition-colors group"
               aria-label={t("openCart")}
             >
               <ShoppingBag className="h-5 w-5 text-foreground group-hover:text-primary transition-colors" />
@@ -135,10 +135,10 @@ export function Header({}: HeaderProps) {
           {/* MOBILE: Right — Search Icon */}
           <button
             onClick={() => setSearchOpen(true)}
-            className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-accent transition-colors"
+            className="lg:hidden inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent transition-colors"
             aria-label="Search"
           >
-            <Search className="h-5 w-5 text-foreground" />
+            <Search className="h-4.5 w-4.5 text-foreground" />
           </button>
         </div>
       </header>

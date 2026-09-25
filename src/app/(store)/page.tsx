@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/config"
 import { formatPrice } from "@/lib/utils"
 import { ProductGrid } from "@/components/products/product-grid"
 import { NewsletterForm } from "@/components/layout/newsletter-form"
-import { HeroWithScrollLock } from "@/components/layout/hero-with-scroll-lock"
+import { Hero } from "@/components/layout/hero"
 import { PLACEHOLDER_IMAGE } from "@/lib/constants"
 import { productRepository, categoryRepository } from "@/lib/repositories"
 
@@ -40,8 +40,8 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero with Scroll Lock and Zoom */}
-      <HeroWithScrollLock />
+      {/* Hero — static responsive image */}
+      <Hero />
 
       {/* Categories */}
       <section className="mx-auto w-full max-w-[1440px] px-4 py-16 sm:px-6 lg:px-8">

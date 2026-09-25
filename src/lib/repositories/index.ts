@@ -1,9 +1,11 @@
-// Re-export the JSON-backed repositories as the default implementations.
-// To swap backends (database, CMS, API), implement the same interfaces
-// and change these exports.
+// ============================================================================
+// Database-backed Repositories — Habib Al-Habayeb
+// ============================================================================
+// Exports database implementations backed by Supabase PostgreSQL and Drizzle ORM.
 
-export { jsonProductRepository as productRepository } from "./json-product-repository"
-export { jsonCategoryRepository as categoryRepository } from "./json-category-repository"
-export { jsonBrandRepository as brandRepository } from "./json-brand-repository"
-export { jsonPageRepository as pageRepository } from "./json-page-repository"
-export { jsonBlogRepository as blogRepository } from "./json-blog-repository"
+export { dbProductRepository as productRepository } from "./db-product-repository"
+export { dbCategoryRepository as categoryRepository } from "./db-category-repository"
+export { dbBrandRepository as brandRepository } from "./db-brand-repository"
+export { dbPageRepository as pageRepository } from "./db-page-repository"
+export { dbBlogRepository as blogRepository } from "./db-blog-repository"
+export { dbOrderRepository as orderRepository } from "./db-order-repository"

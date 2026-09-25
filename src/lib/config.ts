@@ -6,12 +6,11 @@
 export const siteConfig = {
   // Branding
   name: "حبيب الحبايب",
-  tagline: "كل احتياجات البيت في مكان واحد",
-  description:
-    "متجر البقالة الالكترونية الأول في مصر. نوفر لك كل احتياجات البيت من منتجات طازة وموثوقة بأسعار مناسبة.",
+  tagline: "",
+  description: "",
 
-  // Announcement bar (set to "" to hide)
-  announcement: "",
+  // Announcement bar (confirmed)
+  announcement: "أول سوبر ماركت أونلاين في الغنايم",
 
   // URLs
   url: process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
@@ -38,9 +37,9 @@ export const siteConfig = {
     tiktok: "",
   },
 
-  // Shipping
-  freeShippingThreshold: 50000, // in cents (500 EGP)
-  taxRate: 0.14, // 14% Egyptian VAT
+  // Shipping & Tax (configured via backend settings)
+  freeShippingThreshold: 0,
+  taxRate: 0,
 
   // Currency & locale
   currency: "EGP",

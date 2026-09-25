@@ -11,6 +11,8 @@ import { Mail } from "lucide-react"
 import { toast } from "sonner"
 import { contactFormSchema } from "@/lib/validators"
 
+import { submitContactFormAction } from "./actions"
+
 export default function ContactPage() {
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
@@ -26,7 +28,7 @@ export default function ContactPage() {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
     const result = contactFormSchema.safeParse(form)
@@ -36,12 +38,15 @@ export default function ContactPage() {
     }
 
     setLoading(true)
-    // In production, send to support email via API route or form service
-    setTimeout(() => {
-      toast.success("تم إرسال رسالتك! شكراً لتواصلك معنا.")
+    try {
+      const res = await submitContactFormAction(form)
+      toast.success(res.message)
       setForm({ name: "", email: "", subject: "", message: "" })
+    } catch (err: any) {
+      toast.error(err.message || "حدث خطأ أثناء إرسال الرسالة.")
+    } finally {
       setLoading(false)
-    }, 500)
+    }
   }
 
   return (
