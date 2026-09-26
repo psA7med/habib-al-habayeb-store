@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next"
 import { siteConfig } from "@/lib/config"
 import {
-  productRepository,
-  categoryRepository,
-  brandRepository,
-} from "@/lib/repositories"
+  getCachedProducts,
+  getCachedCategories,
+  getCachedBrands,
+} from "@/lib/repositories/cached"
 
 // Static public routes. Admin, account, auth, and checkout are excluded
 // (covered by robots.txt disallow rules).
@@ -27,9 +27,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch all dynamic content from the repository layer so swapping
   // backends (CMS, DB, API) doesn't break the sitemap.
   const [productsResult, categories, brands] = await Promise.all([
-    productRepository.list(undefined, undefined, { page: 1, limit: 10_000 }),
-    categoryRepository.list(),
-    brandRepository.list(),
+    getCachedProducts(undefined, undefined, { page: 1, limit: 10_000 }),
+    getCachedCategories(),
+    getCachedBrands(),
   ])
 
   const now = new Date()

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { PageHeader } from "@/components/ui/page-header"
-import { brandRepository } from "@/lib/repositories"
+import { getCachedBrands } from "@/lib/repositories/cached"
 
 export const metadata: Metadata = {
   title: "All Brands",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 }
 
 export default async function BrandsPage() {
-  const brands = await brandRepository.list()
+  const brands = await getCachedBrands()
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-16 sm:px-6 lg:px-8">

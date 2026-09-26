@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { PageHeader } from "@/components/ui/page-header"
-import { pageRepository } from "@/lib/repositories"
+import { getCachedPages } from "@/lib/repositories/cached"
 import { formatDate } from "@/lib/utils"
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 }
 
 export default async function PagesIndex() {
-  const pages = await pageRepository.list()
+  const pages = await getCachedPages()
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-16 sm:px-6 lg:px-8">

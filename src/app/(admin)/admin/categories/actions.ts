@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import { z } from "zod"
 import { db } from "@/db"
 import { categories, productCategories } from "@/db/schema"
@@ -58,6 +58,8 @@ export async function createCategoryAction(data: CategoryFormData) {
   revalidatePath("/admin/products")
   revalidatePath("/shop")
   revalidatePath("/")
+  updateTag("categories")
+  updateTag("products")
   return { success: true, id: newId }
 }
 
@@ -90,6 +92,8 @@ export async function updateCategoryAction(id: string, data: CategoryFormData) {
   revalidatePath("/admin/products")
   revalidatePath("/shop")
   revalidatePath("/")
+  updateTag("categories")
+  updateTag("products")
   return { success: true }
 }
 
@@ -109,6 +113,8 @@ export async function deleteCategoryAction(id: string) {
   revalidatePath("/admin/products")
   revalidatePath("/shop")
   revalidatePath("/")
+  updateTag("categories")
+  updateTag("products")
   return { success: true }
 }
 
@@ -129,5 +135,6 @@ export async function updateCategorySortOrderAction(items: { id: string; sortOrd
 
   revalidatePath("/admin/categories")
   revalidatePath("/")
+  updateTag("categories")
   return { success: true }
 }

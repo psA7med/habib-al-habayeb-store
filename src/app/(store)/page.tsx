@@ -10,7 +10,7 @@ import { ProductGrid } from "@/components/products/product-grid"
 import { NewsletterForm } from "@/components/layout/newsletter-form"
 import { Hero } from "@/components/layout/hero"
 import { PLACEHOLDER_IMAGE } from "@/lib/constants"
-import { productRepository, categoryRepository } from "@/lib/repositories"
+import { getCachedCategories, getCachedFeaturedProducts } from "@/lib/repositories/cached"
 
 export const metadata: Metadata = {
   title: "حبيب الحبايب - كل احتياجات البيت في مكان واحد",
@@ -34,8 +34,10 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const categories = await categoryRepository.list()
-  const featuredProducts = await productRepository.getFeatured(4)
+  const [categories, featuredProducts] = await Promise.all([
+    getCachedCategories(),
+    getCachedFeaturedProducts(4),
+  ])
 
 
   return (

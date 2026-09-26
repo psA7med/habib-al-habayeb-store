@@ -2,9 +2,13 @@ import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
 export async function middleware(request: NextRequest) {
+  // Forward pathname so server components can detect the current route
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set("x-next-pathname", request.nextUrl.pathname)
+
   let response = NextResponse.next({
     request: {
-      headers: request.headers,
+      headers: requestHeaders,
     },
   })
 
@@ -56,7 +60,7 @@ export async function middleware(request: NextRequest) {
           )
           response = NextResponse.next({
             request: {
-              headers: request.headers,
+              headers: requestHeaders,
             },
           })
           cookiesToSet.forEach(({ name, value, options }) =>
@@ -66,24 +70,25 @@ export async function middleware(request: NextRequest) {
       },
     })
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
     const pathname = request.nextUrl.pathname
 
-    // Protect /admin routes (except /admin/login)
-    if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
-      if (!user) {
+    // Only query Supabase Auth for /admin routes to keep customer storefront blazing fast
+    if (pathname.startsWith("/admin")) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      // Protect /admin routes (except /admin/login)
+      if (pathname !== "/admin/login" && !user) {
         const redirectUrl = new URL("/admin/login", request.url)
         redirectUrl.searchParams.set("redirectTo", pathname)
         return NextResponse.redirect(redirectUrl)
       }
-    }
 
-    // Redirect logged in admins from /admin/login to /admin
-    if (pathname === "/admin/login" && user) {
-      return NextResponse.redirect(new URL("/admin", request.url))
+      // Redirect logged in admins from /admin/login to /admin
+      if (pathname === "/admin/login" && user) {
+        return NextResponse.redirect(new URL("/admin", request.url))
+      }
     }
   }
 

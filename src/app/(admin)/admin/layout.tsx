@@ -1,7 +1,5 @@
-"use client"
-
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { headers } from "next/headers"
 import {
   LayoutDashboard,
   Package,
@@ -11,10 +9,10 @@ import {
   ImageIcon,
   Sliders,
   Settings,
-  LogOut,
   ExternalLink,
 } from "lucide-react"
-import { createClient } from "@/lib/supabase/client"
+import { AdminNavLinks } from "./admin-nav-links"
+import { AdminLogoutButton } from "./admin-logout-button"
 
 const adminNav = [
   { name: "لوحة التحكم", href: "/admin", icon: LayoutDashboard },
@@ -27,29 +25,16 @@ const adminNav = [
   { name: "إعدادات المتجر", href: "/admin/settings", icon: Settings },
 ]
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const pathname = usePathname()
-  const router = useRouter()
-
-  // Skip admin chrome on login page
+  // Detect login page from the request URL to skip admin chrome
+  const headersList = await headers()
+  const pathname = headersList.get("x-next-pathname") || headersList.get("x-invoke-path") || ""
   if (pathname === "/admin/login") {
     return <>{children}</>
-  }
-
-  const handleLogout = async () => {
-    try {
-      const supabase = createClient()
-      await supabase.auth.signOut()
-      router.push("/admin/login")
-      router.refresh()
-    } catch (err) {
-      console.error("Logout error:", err)
-      router.push("/admin/login")
-    }
   }
 
   return (
@@ -62,29 +47,7 @@ export default function AdminLayout({
           </Link>
         </div>
 
-        <nav className="flex-1 space-y-1 p-4 overflow-y-auto">
-          {adminNav.map((item) => {
-            const isActive =
-              item.href === "/admin"
-                ? pathname === "/admin"
-                : pathname.startsWith(item.href)
-
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-neutral-900 text-white shadow-sm"
-                    : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
-                }`}
-              >
-                <item.icon className={`h-4.5 w-4.5 ${isActive ? "text-white" : "text-neutral-500"}`} />
-                {item.name}
-              </Link>
-            )
-          })}
-        </nav>
+        <AdminNavLinks items={adminNav} />
 
         <div className="border-t p-4 space-y-2">
           <Link
@@ -96,13 +59,7 @@ export default function AdminLayout({
             <ExternalLink className="h-4 w-4" />
           </Link>
 
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-          >
-            <LogOut className="h-4 w-4" />
-            تسجيل الخروج
-          </button>
+          <AdminLogoutButton />
         </div>
       </aside>
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
-import { productRepository } from "@/lib/repositories"
+import { getCachedProductSearch } from "@/lib/repositories/cached"
 import { ProductGrid } from "@/components/products/product-grid"
 import { Pagination } from "@/components/products/pagination"
 
@@ -21,7 +21,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   const hasQuery = query.trim().length > 0
   const results = hasQuery
-    ? await productRepository.search(query, { page, limit: 40 })
+    ? await getCachedProductSearch(query, { page, limit: 40 })
     : null
 
   return (

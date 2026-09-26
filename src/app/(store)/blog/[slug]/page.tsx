@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Badge } from "@/components/ui/badge"
 import { breadcrumbJsonLd } from "@/lib/structured-data"
-import { blogRepository } from "@/lib/repositories"
+import { getCachedBlogPostBySlug, getCachedBlogPosts } from "@/lib/repositories/cached"
 import { formatDate } from "@/lib/utils"
 import { PLACEHOLDER_IMAGE } from "@/lib/constants"
 import { siteConfig } from "@/lib/config"
@@ -22,7 +22,7 @@ interface PostProps {
 }
 
 export async function generateStaticParams() {
-  const { items } = await blogRepository.list({ page: 1, limit: 10_000 })
+  const { items } = await getCachedBlogPosts({ page: 1, limit: 10_000 })
   return items.map((p) => ({ slug: p.slug }))
 }
 
@@ -30,7 +30,7 @@ export async function generateMetadata({
   params,
 }: PostProps): Promise<Metadata> {
   const { slug } = await params
-  const post = await blogRepository.getBySlug(slug)
+  const post = await getCachedBlogPostBySlug(slug)
   if (!post) return { title: "Not Found" }
 
   return {
@@ -54,7 +54,7 @@ export async function generateMetadata({
 
 export default async function BlogPostPage({ params }: PostProps) {
   const { slug } = await params
-  const post = await blogRepository.getBySlug(slug)
+  const post = await getCachedBlogPostBySlug(slug)
   if (!post) notFound()
 
   const articleJsonLd = {

@@ -3,7 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { PageHeader } from "@/components/ui/page-header"
 import { Pagination } from "@/components/products/pagination"
-import { blogRepository } from "@/lib/repositories"
+import { getCachedBlogPosts } from "@/lib/repositories/cached"
 import { formatDate } from "@/lib/utils"
 import { PLACEHOLDER_IMAGE } from "@/lib/constants"
 import { siteConfig } from "@/lib/config"
@@ -31,7 +31,7 @@ export default async function BlogIndex({ searchParams }: BlogIndexProps) {
   const params = await searchParams
   const page = Number(params.page) || 1
 
-  const { items: posts, pagination } = await blogRepository.list({
+  const { items: posts, pagination } = await getCachedBlogPosts({
     page,
     limit: 9,
   })

@@ -1,7 +1,8 @@
 "use client"
-
-import { useState, useEffect, useCallback, useRef, type KeyboardEvent as ReactKeyboardEvent } from "react"
+ 
+import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Search, X, ArrowRight } from "lucide-react"
 import { StarRating } from "@/components/products/star-rating"
@@ -13,12 +14,12 @@ import data from "@/data/products.json"
 const allProducts = data.products as Product[]
 
 const popularSearches = [
-  "Headphones",
-  "Coffee",
-  "Leather",
-  "Wireless",
-  "Organic",
-  "Candle",
+  "أرز",
+  "زيت",
+  "سكر",
+  "مكرونة",
+  "جبنة",
+  "شاي",
 ]
 
 interface SearchModalProps {

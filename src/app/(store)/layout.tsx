@@ -3,16 +3,12 @@ import { Footer } from "@/components/layout/footer"
 import { AnnouncementBar } from "@/components/layout/announcement-bar"
 import { CartDrawer } from "@/components/cart/cart-drawer"
 import { BackToTop } from "@/components/layout/back-to-top"
-import { categoryRepository } from "@/lib/repositories"
 
 export default async function StoreLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  // Categories are no longer used by the Header in the simplified layout
-  // Keeping this fetch in case they're needed by other components in the future
-  const _categories = await categoryRepository.list()
 
   return (
     <>

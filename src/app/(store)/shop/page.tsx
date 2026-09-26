@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Suspense } from "react"
-import { productRepository, categoryRepository } from "@/lib/repositories"
+import { getCachedProducts, getCachedCategories } from "@/lib/repositories/cached"
 import { ProductGrid } from "@/components/products/product-grid"
 import { Pagination } from "@/components/products/pagination"
 import { SortDropdown } from "@/components/products/sort-dropdown"
@@ -47,7 +47,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
   const sort = SORT_OPTIONS[sortKey] ?? SORT_OPTIONS.newest
 
-  const { items: products, pagination } = await productRepository.list(
+  const { items: products, pagination } = await getCachedProducts(
     {
       category: categorySlug,
       search: searchQuery,
@@ -56,7 +56,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     { page, limit: 40 }
   )
 
-  const allCategories = await categoryRepository.list()
+  const allCategories = await getCachedCategories()
   const categories = allCategories.filter((c) => !c.parentId)
 
   // Build current search params for pagination links

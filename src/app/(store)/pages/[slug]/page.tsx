@@ -10,7 +10,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { breadcrumbJsonLd } from "@/lib/structured-data"
-import { pageRepository } from "@/lib/repositories"
+import { getCachedPageBySlug, getCachedPages } from "@/lib/repositories/cached"
 import { formatDate } from "@/lib/utils"
 import { siteConfig } from "@/lib/config"
 
@@ -19,7 +19,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const pages = await pageRepository.list()
+  const pages = await getCachedPages()
   return pages.map((p) => ({ slug: p.slug }))
 }
 
@@ -27,7 +27,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const page = await pageRepository.getBySlug(slug)
+  const page = await getCachedPageBySlug(slug)
   if (!page) return { title: "Not Found" }
 
   return {
@@ -45,7 +45,7 @@ export async function generateMetadata({
 
 export default async function CmsPageDetail({ params }: PageProps) {
   const { slug } = await params
-  const page = await pageRepository.getBySlug(slug)
+  const page = await getCachedPageBySlug(slug)
   if (!page) notFound()
 
   return (

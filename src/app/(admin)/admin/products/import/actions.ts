@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import { z } from "zod"
 import { db } from "@/db"
 import {
@@ -381,5 +381,7 @@ export async function executeCsvImportAction(
 
   revalidatePath("/admin/products")
   revalidatePath("/admin/categories")
+  updateTag("products")
+  updateTag("categories")
   return report
 }

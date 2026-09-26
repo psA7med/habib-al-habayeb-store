@@ -1,23 +1,53 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import { productRepository, categoryRepository, brandRepository } from "@/lib/repositories"
+import {
+  getCachedProductBySlug,
+  getCachedCategoryBySlug,
+  getCachedCategoryById,
+  getCachedCategoryAncestors,
+  getCachedCategoryChildren,
+  getCachedProductsByCategory,
+  getCachedProducts,
+  getCachedCategories,
+  getCachedBrands,
+  getCachedBrandBySlug,
+  getCachedBrandById,
+} from "@/lib/repositories/cached"
 import { ProductDetailView } from "./product-detail-view"
 import { CategoryView } from "./category-view"
 import { BrandView } from "./brand-view"
 import { formatPrice } from "@/lib/utils"
 import { siteConfig } from "@/lib/config"
 import data from "@/data/products.json"
+import type { Product, Category, Brand } from "@/types"
 
 interface SlugPageProps {
   params: Promise<{ slug: string }>
 }
 
-// Only render slugs returned by generateStaticParams — any other slug
-// automatically gets a proper 404 response. Rebuild/redeploy to pick
-// up new products, categories, or brands.
-export const dynamicParams = false
+// Allow dynamic slugs so products, categories, and brands added or edited
+// in the live database are served immediately without requiring a full rebuild.
+export const dynamicParams = true
 
 export async function generateStaticParams() {
+  try {
+    const [productsRes, categoriesList, brandsList] = await Promise.all([
+      getCachedProducts(undefined, undefined, { page: 1, limit: 100 }).catch(() => ({ items: [] as Product[] })),
+      getCachedCategories().catch(() => [] as Category[]),
+      getCachedBrands().catch(() => [] as Brand[]),
+    ])
+
+    const productSlugs = productsRes.items.map((p: Product) => ({ slug: p.slug }))
+    const categorySlugs = categoriesList.map((c: Category) => ({ slug: c.slug }))
+    const brandSlugs = brandsList.map((b: Brand) => ({ slug: b.slug }))
+
+    if (productSlugs.length > 0 || categorySlugs.length > 0) {
+      return [...productSlugs, ...categorySlugs, ...brandSlugs]
+    }
+  } catch (err) {
+    console.warn("generateStaticParams fallback to static data:", err)
+  }
+
   const productSlugs = data.products
     .filter((p) => p.status === "active")
     .map((p) => ({ slug: p.slug }))
@@ -34,7 +64,7 @@ export async function generateMetadata({
 }: SlugPageProps): Promise<Metadata> {
   const { slug } = await params
 
-  const product = await productRepository.getBySlug(slug)
+  const product = await getCachedProductBySlug(slug)
   if (product) {
     const variant = product.variants[0]
     const price = variant ? formatPrice(variant.price, variant.currency) : ""
@@ -60,7 +90,7 @@ export async function generateMetadata({
     }
   }
 
-  const category = await categoryRepository.getBySlug(slug)
+  const category = await getCachedCategoryBySlug(slug)
   if (category) {
     return {
       title: category.name,
@@ -75,7 +105,7 @@ export async function generateMetadata({
     }
   }
 
-  const brand = await brandRepository.getBySlug(slug)
+  const brand = await getCachedBrandBySlug(slug)
   if (brand) {
     return {
       title: brand.name,
@@ -97,11 +127,11 @@ export default async function SlugPage({ params }: SlugPageProps) {
   const { slug } = await params
 
   // Check product first
-  const product = await productRepository.getBySlug(slug)
+  const product = await getCachedProductBySlug(slug)
   if (product) {
     // Pick the most specific category (prefer one with a parentId, i.e. a subcategory)
     const productCategories = await Promise.all(
-      product.categoryIds.map((id) => categoryRepository.getById(id))
+      product.categoryIds.map((id) => getCachedCategoryById(id))
     )
     const validCategories = productCategories.filter(
       (c): c is NonNullable<typeof c> => c !== null
@@ -111,13 +141,12 @@ export default async function SlugPage({ params }: SlugPageProps) {
 
     const [relatedProducts, brand, categoryAncestors] = await Promise.all([
       primaryCategory
-        ? productRepository
-            .getByCategory(primaryCategory.slug, { page: 1, limit: 5 })
+        ? getCachedProductsByCategory(primaryCategory.slug, { page: 1, limit: 5 })
             .then((r) => r.items.filter((p) => p.id !== product.id).slice(0, 4))
         : Promise.resolve([]),
-      brandRepository.getById(product.brandId),
+      product.brandId ? getCachedBrandById(product.brandId) : Promise.resolve(null),
       primaryCategory
-        ? categoryRepository.getAncestors(primaryCategory.id)
+        ? getCachedCategoryAncestors(primaryCategory.id)
         : Promise.resolve([]),
     ])
 
@@ -132,13 +161,13 @@ export default async function SlugPage({ params }: SlugPageProps) {
   }
 
   // Check category
-  const category = await categoryRepository.getBySlug(slug)
+  const category = await getCachedCategoryBySlug(slug)
   if (category) {
     const [{ items: products, pagination }, subcategories, ancestors] =
       await Promise.all([
-        productRepository.getByCategory(slug, { page: 1, limit: 40 }),
-        categoryRepository.getChildren(category.id),
-        categoryRepository.getAncestors(category.id),
+        getCachedProductsByCategory(slug, { page: 1, limit: 40 }),
+        getCachedCategoryChildren(category.id),
+        getCachedCategoryAncestors(category.id),
       ])
     return (
       <CategoryView
@@ -152,9 +181,9 @@ export default async function SlugPage({ params }: SlugPageProps) {
   }
 
   // Check brand
-  const brand = await brandRepository.getBySlug(slug)
+  const brand = await getCachedBrandBySlug(slug)
   if (brand) {
-    const { items: products, pagination } = await productRepository.list(
+    const { items: products, pagination } = await getCachedProducts(
       { tags: [] },
       undefined,
       { page: 1, limit: 40 }

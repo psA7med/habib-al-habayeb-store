@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Search, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 import type { Product } from "@/types"
@@ -23,6 +24,7 @@ interface SearchInputProps {
 }
 
 export function SearchInput({ onClose }: SearchInputProps) {
+  const router = useRouter()
   const t = useTranslations("nav")
   const [query, setQuery] = useState("")
   const [suggestions, setSuggestions] = useState<Product[]>([])
@@ -38,7 +40,6 @@ export function SearchInput({ onClose }: SearchInputProps) {
     }
 
     const lowerQuery = query.toLowerCase()
-    console.log(`[SearchInput] Searching for: "${query}" in ${allProducts.length} products`)
 
     // Match against name, description, and tags
     const filtered = allProducts
@@ -51,7 +52,6 @@ export function SearchInput({ onClose }: SearchInputProps) {
       )
       .slice(0, 6)
 
-    console.log(`[SearchInput] Found ${filtered.length} matches`)
     setSuggestions(filtered)
     setSelectedIndex(-1)
   }, [query])
@@ -77,7 +77,8 @@ export function SearchInput({ onClose }: SearchInputProps) {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (suggestions.length === 0) {
         if (e.key === "Enter" && query.trim()) {
-          window.location.href = `/search?q=${encodeURIComponent(query)}`
+          router.push(`/search?q=${encodeURIComponent(query)}`)
+          onClose?.()
         }
         if (e.key === "Escape") {
           setQuery("")
@@ -101,9 +102,13 @@ export function SearchInput({ onClose }: SearchInputProps) {
         case "Enter":
           e.preventDefault()
           if (selectedIndex >= 0) {
-            window.location.href = `/${suggestions[selectedIndex].slug}`
+            router.push(`/${suggestions[selectedIndex].slug}`)
+            setSuggestions([])
+            onClose?.()
           } else if (query.trim()) {
-            window.location.href = `/search?q=${encodeURIComponent(query)}`
+            router.push(`/search?q=${encodeURIComponent(query)}`)
+            setSuggestions([])
+            onClose?.()
           }
           break
         case "Escape":
@@ -112,11 +117,13 @@ export function SearchInput({ onClose }: SearchInputProps) {
           break
       }
     },
-    [suggestions, selectedIndex, query]
+    [suggestions, selectedIndex, query, router, onClose]
   )
 
   const handleSuggestionClick = (slug: string) => {
-    window.location.href = `/${slug}`
+    setSuggestions([])
+    router.push(`/${slug}`)
+    onClose?.()
   }
 
   const searchUrl = query.trim() ? `/search?q=${encodeURIComponent(query)}` : "#"

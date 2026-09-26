@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, updateTag } from "next/cache"
 import { z } from "zod"
 import { db } from "@/db"
 import {
@@ -22,7 +22,7 @@ const productSchema = z.object({
   slug: z
     .string()
     .min(2, "الرابط اللطيف مطلوب")
-    .regex(/^[a-z0-9-]+$/, "الرابط اللطيف يجب أن يحتوي على أحرف إنجليزية صغيرة وأرقام وشرطات فقط"),
+    .regex(/^([a-zA-Z0-9-]|[\u0600-\u06FF-])+$/, "الرابط اللطيف يجب أن يحتوي على أحرف وأرقام وشرطات فقط"),
   descriptionAr: z.string().optional().default(""),
   bodyAr: z.string().nullish().default(""),
   status: z.enum(["draft", "active", "archived"]).default("active"),
@@ -117,6 +117,8 @@ export async function createProductAction(data: ProductFormData) {
   revalidatePath("/admin/products")
   revalidatePath("/shop")
   revalidatePath("/")
+  updateTag("products")
+  updateTag("categories")
   return { success: true, productId: newProductId }
 }
 
@@ -219,6 +221,8 @@ export async function updateProductAction(id: string, data: ProductFormData) {
   revalidatePath(`/admin/products/${id}`)
   revalidatePath("/shop")
   revalidatePath("/")
+  updateTag("products")
+  updateTag("categories")
   return { success: true }
 }
 
@@ -238,6 +242,7 @@ export async function setProductStatusAction(id: string, status: "draft" | "acti
   revalidatePath("/admin/products")
   revalidatePath("/shop")
   revalidatePath("/")
+  updateTag("products")
   return { success: true }
 }
 
@@ -255,5 +260,6 @@ export async function deleteProductAction(id: string) {
   revalidatePath("/admin/products")
   revalidatePath("/shop")
   revalidatePath("/")
+  updateTag("products")
   return { success: true }
 }
